@@ -11,17 +11,22 @@ const app = express();
 
 app.use(logger("dev"));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 app.use(express.static("public"));
+app.use(express.json());
+
 
 
 //Connect to Mongoose
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/Workout", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useCreateIndex: true,
 	useFindAndModify: false
 
+});
+
+app.get("/", (req, res) => {
+	res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
 app.get("/exercise", (req, res) => {
@@ -33,9 +38,10 @@ app.get("/stats", (req, res) => {
 });
 
 app.get("/api/workouts", (req, res) => {
-	db.Workout.find({}, null, { sort: { day: 1 } })
+	db.Workout.findOne({}, null, { sort: { day: 1 } })
 		.populate("exercises")
 		.then((dbWorkout) => {
+       console.log(dbWorkout)
 			res.json(dbWorkout);
 		})
 		.catch((err) => {
@@ -44,7 +50,8 @@ app.get("/api/workouts", (req, res) => {
 });
 
 app.put("/api/workouts/:id", (req, res) => {
-	var workoutID = req.params.id;
+    var workoutID = req.params.id;
+
 	db.Exercise.create(req.body)
 		.then(({ _id }) =>
 			db.Workout.findOneAndUpdate(
@@ -75,6 +82,7 @@ app.get("/api/workouts/range", (req, res) => {
 	db.Workout.find({}, null, { sort: { day: 1 } })
 		.populate("exercises")
 		.then((dbWorkout) => {
+            console.log(dbWorkout)
 			res.json(dbWorkout);
 		})
 		.catch((err) => {

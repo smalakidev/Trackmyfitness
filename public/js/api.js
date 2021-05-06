@@ -7,7 +7,12 @@ const API = {
       console.log(err)
     }
     const json = await res.json();
-
+      console.log(json);
+    if (json == null ){
+      return ["No Workouts"]
+   
+      }
+   
     return json[json.length - 1];
   },
   async addExercise(data) {
@@ -20,8 +25,12 @@ const API = {
     });
 
     const json = await res.json();
+    if (json == null ){
+     return ["No Workouts"]
 
-    return json;
+    }
+
+   else return json;
   },
   async createWorkout(data = {}) {
     const res = await fetch("/api/workouts", {

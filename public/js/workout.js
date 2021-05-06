@@ -12,7 +12,7 @@ async function initWorkout() {
       numExercises: lastWorkout.exercises.length,
       ...tallyExercises(lastWorkout.exercises)
     };
-
+console.log(workoutSummary)
     renderWorkoutSummary(workoutSummary);
   } else {
     renderNoWorkoutText()
@@ -28,6 +28,7 @@ function tallyExercises(exercises) {
     } else if (curr.type === "cardio") {
       acc.totalDistance = (acc.totalDistance || 0) + curr.distance;
     }
+    
     return acc;
   }, {});
   return tallied;
